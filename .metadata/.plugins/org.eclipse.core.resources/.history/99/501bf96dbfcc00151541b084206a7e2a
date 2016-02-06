@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import IO.DataIOClass;
 import view.JoinView;
 import view.LoginView;
+import view.ManagerView;
 import view.SeatView1;
 import view.SeatView2;
 
@@ -14,6 +15,9 @@ public class UpdateModel {
 	// -------------------파일 저장(클래스)----------------------------------------
 	private DataIOClass dataIOClass;
 	// ----------------------------------------------------------------------
+	// ------------------ManagerView(관리자 뷰) -------------------------------
+	private ManagerView managerView;
+	// ---------------------------------------------------------------------
 	// ------------------SeatTabView(좌석 탭) 업데이트 선언부-----------------------
 	private static String curPaneTitle;
 	// ---------------------------------------------------------------------

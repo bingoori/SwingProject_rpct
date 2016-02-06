@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import IO.DataIOClass;
 import view.JoinView;
 import view.LoginView;
+import view.ManagerView;
 import view.SeatView1;
 import view.SeatView2;
 
@@ -14,6 +15,9 @@ public class UpdateModel {
 	// -------------------파일 저장(클래스)----------------------------------------
 	private DataIOClass dataIOClass;
 	// ----------------------------------------------------------------------
+	// ------------------ManagerView(관리자 뷰) -------------------------------
+	private ManagerView managerView;
+	// ---------------------------------------------------------------------
 	// ------------------SeatTabView(좌석 탭) 업데이트 선언부-----------------------
 	private static String curPaneTitle;
 	// ---------------------------------------------------------------------
@@ -38,7 +42,7 @@ public class UpdateModel {
 	private static int SeatCount2 = 72;
 
 	// ---------------------------------------------------------------------
-	// ---------------------ManagerView(관리자 화면)------------------------------
+	// ---------------------------ManagerView------------------------------------
 	public Vector[] getManagerMemberList() {
 		return this.vMemberList;
 	}
@@ -121,13 +125,18 @@ public class UpdateModel {
 		joinView = new JoinView();
 		dataIOClass = new DataIOClass();
 		boolean result = MemberOverwrapCheck(Id);
+		System.out.println(state + "state");
+		System.out.println(Id + " " + Psw + " " + Name + " " + Birth);
 		/*
 		 * JoinView(회원가입) 클래스로부터 회원 정보를 받아 리스트에 저장하는 메서드
 		 */
 		if (result == true) {
 			// MemberOverwrapCheck() 메서드에서 아이디가 기가입자인지 아닌지 확인후 값 리턴 받는다.
+			System.out.println("이미 가입된 회원이므로 회원가입창(클래스)에서 실패 메세지를 출력합니다.");
 			joinView.ShowFailMessage();
 		} else if (result == false) {
+
+			System.out.println("가입된 회원이 아니므로, vMemberList -> 에 저장합니다.");
 			addIdCheckList(Id);// vMemberCheckList에 아이디 추가
 			// 아이디 0 , 패스워드 1 , 이름 2, 생일 3, 로그인 이용 4, 좌석사용 5, 입실 6, 퇴실 7, 연장 8,
 			// 좌석위치 9, 열람실 10, 좌석 이동 여부 11
@@ -143,7 +152,11 @@ public class UpdateModel {
 			vMemberList[index].add(null);// 8
 			vMemberList[index].add(null);// 9
 			vMemberList[index].add(null);// 10
+
 			index++;
+
+			System.out.println(" 정보를 업데이트(저장) 하였고, 인덱스를 증가시켰습니다.");
+			System.out.println("그리고 기존회원 인지 아닌지 확인을 위한 vMemberCheckList에 아이디만 저장하였습니다.");
 			if (state == 1) {
 				joinView.ShowSuccessMessage();
 				dataIOClass.saveMemberList(vMemberList, (index - 1));
@@ -273,7 +286,7 @@ public class UpdateModel {
 	}
 
 	/////////////////////////////////////////////////////////////////
-	/////////////// SeatView(좌석화면)의 기능 처리 부분///////////////////////
+	/////////////// SeatView1(로그인창)의 기능 처리 부분///////////////////////
 	// 회원을 좌석 사용중으로 업데이트 한다.
 	public void SeatUserUpdateTrue() {
 		vMemberList[accessIdIndex].set(5, true);
