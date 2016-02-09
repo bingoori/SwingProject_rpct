@@ -95,6 +95,11 @@ public class JoinView {
 		JOptionPane.showMessageDialog(null, "가입 완료 되었습니다.");
 	}
 
+	public void ShowLoadMessage() {
+		JOptionPane.showMessageDialog(null, "회원목록을 로드 하였습니다.");
+
+	}
+
 	public void ClearTextField() {
 		this.joinTFId.setText("");
 		this.joinTFPsw.setText("");

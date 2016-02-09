@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -37,7 +38,7 @@ public final class LoginView extends JoinView implements ActionListener {
 	private static JLabel loginLId;
 	private static JTextField loginTFId; // 어쩔수 없음
 	private static JLabel loginLPsw;
-	private static JTextField loginTFPsw;
+	private static JPasswordField loginTFPsw;
 	private static JButton loginButton;
 	private static JButton joinButton;
 	private static JButton logoutButton;
@@ -74,8 +75,9 @@ public final class LoginView extends JoinView implements ActionListener {
 		loginLPsw.setForeground(Color.white);
 		loginTFId = new JTextField(20);
 		loginTFId.setBounds(70, 250, 200, 20);
-		loginTFPsw = new JTextField(20);
+		loginTFPsw = new JPasswordField(20);
 		loginTFPsw.setBounds(70, 300, 200, 20);
+		loginTFPsw.setEchoChar('*');
 		//
 		loginButton = new JButton(new ImageIcon("image/login.jpg"));
 		loginButton.setBounds(65, 350, 100, 30);
@@ -178,7 +180,11 @@ public final class LoginView extends JoinView implements ActionListener {
 		String command = event.getActionCommand();
 		switch (command) {
 		case "로그인": {
-			model.login(loginTFId.getText(), loginTFPsw.getText());
+			String Psw = "";
+			for (char pass : loginTFPsw.getPassword()) {
+				Psw += pass;
+			}
+			model.login(loginTFId.getText(), Psw);
 			break;
 		}
 		case "회원가입": {

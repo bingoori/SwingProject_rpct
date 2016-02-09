@@ -1,0 +1,365 @@
+package model;
+
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
+
+import IO.DataIOClass;
+import view.JoinView;
+import view.LoginView;
+import view.SeatView1;
+import view.SeatView2;
+
+public class UpdateModel {
+	// -------------------파일 저장(클래스)----------------------------------------
+	private DataIOClass dataIOClass;
+	// ----------------------------------------------------------------------
+	// ------------------SeatTabView(좌석 탭) 업데이트 선언부-----------------------
+	private static String curPaneTitle;
+	// ---------------------------------------------------------------------
+	// ------------------JoinView(회원가입창) 회원목록 업데이트을 위한 선언부--------------
+	private JoinView joinView;
+	// 회원 200명만 이용할 수 있는 프리미어 도서관
+	private static Vector[] vMemberList = new Vector[200];
+	private static Vector<String> vMemberCheckList = new Vector<String>();
+	private static int index = 0; // 순서대로 리스트에 회원을 넣기위한 변수
+	// --------------------------------------------------------------------
+	// ------------------LoginView(로그인창) 업데이트을 위한 선언부--------------------
+	private LoginView loginView;
+	private int memberIndex = 0; // 회원이 몇번쨰 리스트에 있는지 값 비교를 위한 인덱스
+	// ---------------------------------------------------------------------
+	// -------------- SeatView(열람실) 업데이트을 위한 선언부----------------------
+	private SeatView1 seatView1;
+	private SeatView2 seatView2;
+	private static boolean moveState = false;
+	private static String accessId = "";
+	private static int accessIdIndex = 0;
+	private static int SeatCount1 = 72;
+	private static int SeatCount2 = 72;
+
+	// ---------------------------------------------------------------------
+	// ---------------------ManagerView(관리자 화면)------------------------------
+	public Vector[] getManagerMemberList() {
+		return this.vMemberList;
+	}
+
+	public int getManagerMemberIndex() {
+		return this.index;
+	}
+
+	public void functionManager(String delId) {
+
+		setMemberIndex(delId);
+		String readingroomCheck = CheckOutInfoRoom();
+		String seatLocation = CheckOutInfoLocation();
+		UserInfoDel();
+		char row = seatLocation.charAt(0);// A,B,C,D....
+		int col = Integer.parseInt(seatLocation.charAt(2) + "");// 1열,2열....
+		int rowNum = 0;
+		if (row == 'A') {
+			rowNum = 0;
+		} else if (row == 'B') {
+			rowNum = 1;
+		} else if (row == 'C') {
+			rowNum = 2;
+		} else if (row == 'D') {
+			rowNum = 3;
+		} else if (row == 'E') {
+			rowNum = 4;
+		} else if (row == 'F') {
+			rowNum = 5;
+		}
+		// 각열람실에 대한 상태값을 받아 좌석을 초기화한다. 1열람실은 : 1 <> 2열람실 : 2
+		if (readingroomCheck.equals("1열람실")) {
+			SeatInit(rowNum, (col - 1), row, 1);
+			JOptionPane.showMessageDialog(null, "강제퇴장 되었습니다.");
+		} else if (readingroomCheck.equals("2열람실")) {
+			SeatInit(rowNum, (col - 1), row, 2);
+			JOptionPane.showMessageDialog(null, "강제퇴장 되었습니다.");
+		}
+		seatMoveStateFalse();
+	}
+
+	// -------------- SeatTabView(좌석 탭 화면) 기능 처리 부분------------------------
+	public void setRoomName(String roomName) {
+		this.curPaneTitle = roomName;
+	}
+
+	public String getRoomName() {
+
+		return this.curPaneTitle;
+	}
+
+	// ---------------------------------------------------------------------
+	/////////////// JoinView(회원가입창)의 기능 처리 부분//////////////////////
+
+	public void setMemberIndex(String Id) {
+		// 현재 회원아이디가 저장된 리스트에서 인덱스 값을 가지고 온다.
+		this.memberIndex = vMemberCheckList.indexOf(Id);
+		this.accessIdIndex = vMemberCheckList.indexOf(Id);
+	}
+
+	public boolean MemberOverwrapCheck(String Id) {
+		boolean result = false;
+		/*
+		 * 현재 가입하는 아이디가 회원인지 아닌지 중복 체크하는 메서드
+		 */
+		if (vMemberCheckList.contains(Id)) {
+			setMemberIndex(Id);
+			result = true;
+		} else if (!vMemberCheckList.contains(Id)) {
+			result = false;
+		}
+		return result;
+	}
+
+	public void addIdCheckList(String Id) {
+		this.vMemberCheckList.add(Id);
+	}
+
+	public void setMemberList(String Id, String Psw, String Name, String Birth, int state) {
+		joinView = new JoinView();
+		dataIOClass = new DataIOClass();
+		boolean result = MemberOverwrapCheck(Id);
+		/*
+		 * JoinView(회원가입) 클래스로부터 회원 정보를 받아 리스트에 저장하는 메서드
+		 */
+		if (result == true) {
+			// MemberOverwrapCheck() 메서드에서 아이디가 기가입자인지 아닌지 확인후 값 리턴 받는다.
+			joinView.ShowFailMessage();
+		} else if (result == false) {
+			addIdCheckList(Id);// vMemberCheckList에 아이디 추가
+			// 아이디 0 , 패스워드 1 , 이름 2, 생일 3, 로그인 이용 4, 좌석사용 5, 입실 6, 퇴실 7, 연장 8,
+			// 좌석위치 9, 열람실 10, 좌석 이동 여부 11
+			vMemberList[index] = new Vector<String>();
+			vMemberList[index].add(Id);// 0
+			vMemberList[index].add(Psw);// 1
+			vMemberList[index].add(Name);// 2
+			vMemberList[index].add(Birth);// 3
+			vMemberList[index].add(false);// 4 로그인
+			vMemberList[index].add(false);// 5 좌석사용
+			vMemberList[index].add(null);// 6
+			vMemberList[index].add(null);// 7
+			vMemberList[index].add(null);// 8
+			vMemberList[index].add(null);// 9
+			vMemberList[index].add(null);// 10
+			index++;
+			if (state == 1) {
+				joinView.ShowSuccessMessage();
+				dataIOClass.saveMemberList(vMemberList, (index - 1));
+			}
+		}
+
+	}
+
+	/////////////////////////////////////////////////////////////////
+	/////////////// LoginView(로그인창)의 기능 처리 부분///////////////////////
+	public int LoginCheck() {
+		int result = 0;
+		setMemberIndex(accessId);
+		// 회원이 로그인 상태인지 또는 좌성을 이용중이지 않으면 값을 1을 리턴 한다.
+		// 회원이 로그인 상태인지 또는 좌성을 이용이면 값을 2를 리턴 한다
+		if (vMemberList[accessIdIndex].get(4).equals(true) && vMemberList[accessIdIndex].get(5).equals(false)) {
+			result = 1;
+		} else if (vMemberList[accessIdIndex].get(4).equals(true) && vMemberList[accessIdIndex].get(5).equals(true)) {
+			result = 2;
+		}
+		return result;
+	}
+
+	public void login(String Id, char[] cs) {
+		// 로그인하는 메서드
+		loginView = new LoginView();
+		if (MemberOverwrapCheck(Id) == true && (vMemberList[memberIndex].get(1).equals(cs))) {
+			System.out.println("로그인 되었습니다.");
+			// System.out.println((String)vMemberList[accessIdIndex].get(4));
+			// 좌석을 사용중이면
+			if (vMemberList[accessIdIndex].get(5).equals(true)) {
+				vMemberList[accessIdIndex].set(4, true); // 인덱스 4는 로그인 여부
+				// 아이디,좌석위치,열람실,입실,퇴실,연장횟수를 뷰에 넘겨줌
+				loginView.loginViewConvert(Id, 0);
+				loginView.SeatInfoView((String) vMemberList[accessIdIndex].get(0),
+						(String) vMemberList[accessIdIndex].get(10), (String) vMemberList[accessIdIndex].get(9),
+						(String) vMemberList[accessIdIndex].get(6), (String) vMemberList[accessIdIndex].get(7),
+						(int) vMemberList[accessIdIndex].get(8));
+			} else if (vMemberList[accessIdIndex].get(5).equals(false)) {
+				// 화면 전환을 위한 메서드
+				loginView.loginViewConvert(Id, 1);
+				// 로그인한 아이디는 로그인 상태가 되도록 값을 변경한다.
+				vMemberList[accessIdIndex].set(4, true); // 인덱스 4는 로그인 여부
+			}
+
+			// 접근한 아이디를 저장
+			this.accessId = Id;
+		} else {
+			loginView.ShowFailMessage();
+		}
+
+	}
+
+	public void LoginUserUpdate() {
+		setMemberIndex(accessId);// 현재 접속한 회원의 인덱스를 가져오는 메서드
+		vMemberList[accessIdIndex].set(4, false);
+	}
+
+	// 현재 로그인한 유저가 좌석을 사용중인지 아닌지 확인하는 메서드
+	public boolean userSeatCheck() { // 아이디 0 , 패스워드 1 , 이름 2, 생일 3, 로그인 이용 4,
+										// 좌석사용 5, 입실 6, 퇴실 7, 연장 8,
+										// 좌석위치 9, 열람실 10, 좌석 이동 여부 11
+		return (boolean) vMemberList[accessIdIndex].get(5);
+	}
+
+	public void userLoginTrue() {
+		vMemberList[accessIdIndex].set(4, true);
+
+		System.out.println(vMemberList[accessIdIndex].get(0) + "0");
+		System.out.println(vMemberList[accessIdIndex].get(4) + "4");
+	}
+
+	// 현재 로그인한 유저의 입실 시간을 반환하는 메서드
+	public String userInTimeCheck() {
+		return (String) vMemberList[accessIdIndex].get(6);
+	}
+
+	// 현재 로그인한 유저의 퇴실시간을 반환하는 메서드
+	public String userExTimeCheck() {
+		return (String) vMemberList[accessIdIndex].get(7);
+	}
+
+	public int userExCount() {
+		// 현재 로그인한 유저의 연장 횟수를 반환하는 메서드
+		return (int) vMemberList[accessIdIndex].get(8);
+	}
+
+	public void userExCountUp(String extensionHour) {
+
+		vMemberList[accessIdIndex].set(7, extensionHour);
+		System.out.println(extensionHour);
+		int count = (int) vMemberList[accessIdIndex].get(8);
+		vMemberList[accessIdIndex].set(8, (count + 1));
+
+	}
+
+	public void extensionInfo() {
+		// 유저가 연장시 필요한 정보를 로그인 뷰 클래스에 전달 한다.
+		// 아이디 0 , 패스워드 1 , 이름 2, 생일 3, 로그인 이용 4, 좌석사용 5, 입실 6, 퇴실 7, 연장 8,
+		// 좌석위치 9, 열람실 10, 좌석 이동 여부 11
+		loginView = new LoginView();
+		// 열람실 + 좌석위치, 입실시간, 퇴실시간, 연장 횟수 를 로그인 뷰 클래스에 넘긴다.
+
+		loginView.extensionInfoView((String) vMemberList[accessIdIndex].get(10),
+				(String) vMemberList[accessIdIndex].get(9), (String) vMemberList[accessIdIndex].get(6),
+				(String) vMemberList[accessIdIndex].get(7), (int) vMemberList[accessIdIndex].get(8));
+
+	}
+
+	public void extensionTaReLoad() {
+		loginView = new LoginView();
+		loginView.SeatInfoView((String) vMemberList[accessIdIndex].get(0), (String) vMemberList[accessIdIndex].get(10),
+				(String) vMemberList[accessIdIndex].get(9), (String) vMemberList[accessIdIndex].get(6),
+				(String) vMemberList[accessIdIndex].get(7), (int) vMemberList[accessIdIndex].get(8));
+	}
+
+	public void UserInfoDel() {// 퇴실하는 유저의 좌석에 대한 정보를 모두 제거하고, 열람실,좌석에대한 이용여부도
+		// 초기화
+		vMemberList[accessIdIndex].set(4, false);
+		vMemberList[accessIdIndex].set(5, false);
+		vMemberList[accessIdIndex].set(6, null); // 6 입실시간
+		vMemberList[accessIdIndex].set(7, null); // 7 퇴실시간
+		vMemberList[accessIdIndex].set(8, null); // 8 연장횟수
+		vMemberList[accessIdIndex].set(9, null); // 9 좌석위치
+		vMemberList[accessIdIndex].set(10, null); // 10 열람실
+
+	}
+
+	/////////////////////////////////////////////////////////////////
+	/////////////// SeatView(좌석화면)의 기능 처리 부분///////////////////////
+	// 회원을 좌석 사용중으로 업데이트 한다.
+	public void SeatUserUpdateTrue() {
+		vMemberList[accessIdIndex].set(5, true);
+		System.out.println(vMemberList[accessIdIndex].get(5) + "5");
+	}
+
+	public void SeatUserUpdateFalse() {
+		vMemberList[accessIdIndex].set(5, false);
+	}
+
+	public void SeatInfoUpdate(String nowTime, String endTime, int extensionNum, String seatLocation,
+			String readingRoom) {
+		loginView = new LoginView();
+
+		// 유저가 사용중인 좌석에 대한 정보를 업데이트 한다.
+		vMemberList[accessIdIndex].set(6, nowTime); // 6 입실시간
+		vMemberList[accessIdIndex].set(7, endTime); // 7 퇴실시간
+		vMemberList[accessIdIndex].set(8, extensionNum); // 8 연장횟수
+		vMemberList[accessIdIndex].set(9, seatLocation); // 9 좌석위치
+		vMemberList[accessIdIndex].set(10, readingRoom); // 10 열람실
+		// 아이디 0 , 패스워드 1 , 이름 2, 생일 3, 로그인 이용 4, 좌석사용 5, 입실 6, 퇴실 7, 연장 8, 좌석위치
+		// 9, 열람실 10
+		// 아이디,좌석위치,열람실,입실,퇴실,연장횟수를 뷰에 넘겨줌
+		loginView.SeatInfoView((String) vMemberList[accessIdIndex].get(0), (String) vMemberList[accessIdIndex].get(10),
+				(String) vMemberList[accessIdIndex].get(9), (String) vMemberList[accessIdIndex].get(6),
+				(String) vMemberList[accessIdIndex].get(7), (int) vMemberList[accessIdIndex].get(8));
+	}
+
+	public String CheckOutInfoRoom() { // 현재 이용자의 열람실명을 반환
+		return (String) vMemberList[accessIdIndex].get(10);
+	}
+
+	public String CheckOutInfoLocation() { // 현재 이용자의 좌석 위치를 반환
+		return (String) vMemberList[accessIdIndex].get(9);
+	}
+
+	public void SeatInit(int rowNum, int col, char row, int state) {
+		seatView1 = new SeatView1();
+		seatView2 = new SeatView2();
+		if (state == 1) {
+			seatView1.SeatInit(rowNum, col, row);
+		} else if (state == 2) {
+			seatView2.SeatInit(rowNum, col, row);
+		}
+
+	}
+
+	public void seatMoveStateTrue() {
+		this.moveState = true;
+
+	}
+
+	public void seatMoveStateFalse() {
+		this.moveState = false;
+
+	}
+
+	public boolean getMoveState() {
+		return this.moveState;
+	}
+
+	public void setSeatCountUp1() {
+		++this.SeatCount1;
+	}
+
+	public void setSeatCountDo1() {
+		--this.SeatCount1;
+		System.out.println(this.SeatCount1);
+	}
+
+	public int getSeatCount1() {
+		return this.SeatCount1;
+	}
+
+	public void setSeatCountUp2() {
+		++this.SeatCount2;
+	}
+
+	public void setSeatCountDo2() {
+		--this.SeatCount2;
+		System.out.println(this.SeatCount2);
+	}
+
+	public int getSeatCount2() {
+		return this.SeatCount2;
+	}
+	/////////////////////////////////////////////////////////////////
+
+}

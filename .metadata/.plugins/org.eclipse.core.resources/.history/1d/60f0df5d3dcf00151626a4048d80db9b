@@ -1,0 +1,21 @@
+import java.awt.BorderLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class JPasswordTest {
+	static JButton access = new JButton("»Æ¿Œ");
+	static JLabel  id =new JLabel("ID : ");
+	static JPanel panel = new JPanel();
+	public static void main(String[] args) {
+		JDialog test = new JDialog();
+		test.setSize(300, 200);
+		
+		access.setSize(300, 50);
+
+		test.add(access,BorderLayout.SOUTH);
+		test.setVisible(true);
+	}
+}
