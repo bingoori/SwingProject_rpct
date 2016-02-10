@@ -180,7 +180,6 @@ public final class LoginView extends JoinView implements ActionListener {
 		String command = event.getActionCommand();
 		switch (command) {
 		case "로그인": {
-			System.out.println("로그인 버튼을 클릭하였습니다.");
 			String Psw = "";
 			for (char pass : loginTFPsw.getPassword()) {
 				Psw += pass;
