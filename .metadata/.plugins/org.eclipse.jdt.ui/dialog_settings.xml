@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="FatJarPackageWizard">
-		<item value="C:\Academy\SwingProject_rpct\SwingProject_rpct" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="C:\Academy\SwingProject_rpct\SwingProject_rpct.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
 		<item value="Main - SwingProject_repct" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="C:\Users\bingoori\Desktop\SwingProject_Last\libraryGUI.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\Users\USER\Desktop\SwingProject_exe\libraryGUI.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="false" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="1" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="C:\Users\USER\Desktop\SwingProject_exe\libraryGUI.jar"/>
 			<item value="C:\Users\bingoori\Desktop\SwingProject_Last\libraryGUI.jar"/>
 			<item value="C:\Users\bingoori\Desktop\SwingProject_Final\libraryGUI.jar"/>
 		</list>

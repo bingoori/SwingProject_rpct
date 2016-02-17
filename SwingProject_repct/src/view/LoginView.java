@@ -255,7 +255,9 @@ public final class LoginView extends JoinView implements ActionListener {
 					LoginView.remainMinute = LoginView.nowMinute - (nowTime.get(Calendar.MINUTE));
 					if (LoginView.remainMinute > 1) {
 						JOptionPane.showMessageDialog(null, "연장은 퇴실예정시간 1시간전부터 가능합니다.");
-					} else if (LoginView.remainMinute <= 1) {
+					}else if(model.userExCount() == 3)
+						{JOptionPane.showMessageDialog(null, "연장은 3회까지 가능 합니다.");}
+					else if (LoginView.remainMinute <= 1) {
 						// 연장 시간 20초 늘린다.
 						LoginView.nowSecond += 20;
 						if (LoginView.nowSecond > 59) {
@@ -303,7 +305,7 @@ public final class LoginView extends JoinView implements ActionListener {
 		// 2시간 연장",
 		// "선택", JOptionPane.YES_NO_CANCEL_OPTION,
 		// JOptionPane.INFORMATION_MESSAGE, null, str, str[0]);
-		// 위의 주석이 원본이고 아래는 테스트 2분 증가
+		// 위의 주석이 원본이고 아래는 테스트 20초 증가
 		int choice = JOptionPane.showOptionDialog(null,
 				"연장 하시겠습니까??\n좌석:" + readingRoom + seatLocation + "\n입실시간:" + nowTime + "\n 퇴실예정시간 : " + exRemainTime
 						+ "\n 연장횟수 :" + ExtensionNum + "\n*퇴실 연장은 퇴실시간 1분 전부터 가능\n 연장시 퇴실시간 2분 연장",

@@ -76,10 +76,11 @@ public class UpdateModel {
 		// 각열람실에 대한 상태값을 받아 좌석을 초기화한다. 1열람실은 : 1 <> 2열람실 : 2
 		if (readingroomCheck.equals("1열람실")) {
 			SeatInit(rowNum, (col - 1), row, 1);
-			JOptionPane.showMessageDialog(null, "강제퇴장 되었습니다.");
+			setSeatCountUp1();
+
 		} else if (readingroomCheck.equals("2열람실")) {
 			SeatInit(rowNum, (col - 1), row, 2);
-			JOptionPane.showMessageDialog(null, "강제퇴장 되었습니다.");
+			setSeatCountUp2();
 		}
 		seatMoveStateFalse();
 	}

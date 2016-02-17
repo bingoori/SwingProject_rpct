@@ -27,8 +27,7 @@ public class DataIOClass {
 		BufferedWriter bw;
 
 		try {
-			bw = new BufferedWriter(
-					new FileWriter("member/MemberList.dat", true));
+			bw = new BufferedWriter(new FileWriter("member/MemberList.dat", true));
 			for (int i = 0; i < 4; i++) {
 				if (i == 3) {
 					bw.write((String) vMemberList[index].get(i));

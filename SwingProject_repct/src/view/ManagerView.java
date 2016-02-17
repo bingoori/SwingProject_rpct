@@ -72,8 +72,8 @@ public class ManagerView {
 				try {
 					tableModel.removeRow(rowcheck);
 					model.functionManager(delId);
+					JOptionPane.showMessageDialog(null, "강제퇴장 되었습니다.");
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "현재 좌석을 배정 받은 회원이 없습니다.");
 				}
 			}
 		});

@@ -97,7 +97,6 @@ public final class SeatView1 extends JPanel {
 				seatBaseImage[i][j].setOpaque(false);
 				seatBaseImage[i][j].setVisible(true);
 
-				add(seatBaseImage[i][j]);
 				seatViewLayered1.add(seatBaseImage[i][j]);
 
 			}
@@ -393,10 +392,11 @@ public final class SeatView1 extends JPanel {
 					if (vMemberList[i] != null) {
 
 						if (ThreadTimeCheck.equals(vMemberList[i].get(7))) {
-							if("1열람실".equals(vMemberList[i].get(10)))
+							
+							if("1열람실".equals((String)vMemberList[i].get(10)))
 							{
 								model.setSeatCountUp1();
-							}else if("2열람실".equals(vMemberList[i].get(10)))
+							}else if("2열람실".equals((String)vMemberList[i].get(10)))
 							{
 								model.setSeatCountUp2();
 							}
